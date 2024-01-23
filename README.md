@@ -34,7 +34,6 @@ BeaconBonanza poses several risks, each note in its symphony playing a unique tu
      ```bash
      sudo tcpdump -n -i en1 -vvv -E 'wlan.fc.type_subtype == 0x08'
      ```
-     ```
    **Note:**
    The `-E` option is used for filtering based on specific Wi-Fi frame types/subtypes, allowing targeted captures. 
 
