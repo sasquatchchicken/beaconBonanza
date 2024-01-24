@@ -10,7 +10,7 @@ def send_beacon(ssid, bssid, channel=1, interval=100, loop_count=5):
     # Create a Dot11Beacon layer with SSID and other information -- a subtype of the beacon frame. It contains information about the capabilities of the network (cap), and an element (Dot11Elt) specifying the SSID of the network.
     dot11_beacon = Dot11Beacon(cap="ESS+privacy") / Dot11Elt(ID="SSID", info=ssid)
 
-    # Create the final frame by combining layers -- The final frame is created by combining the Radiotap header, the beacon header, and the Dot11Beacon layer.
+    # The final frame is created by combining the Radiotap header, the beacon header, and the Dot11Beacon layer.
     frame = radiotap / beacon / dot11_beacon
 
     # Set the channel for the frame
