@@ -60,13 +60,18 @@ SSIDs and Network Information: Beacon frames include information about the SSID 
 
 
    **Example Commands:**
+    The `-E` option is used for filtering based on specific Wi-Fi frame types/subtypes, allowing targeted captures. 
    - Capture Beacon frames with `-E` (Type/Subtype Filtering):
      ```bash
-     sudo tcpdump -n -i en1 -vvv -E 'wlan.fc.type_subtype == 0x08'
+     sudo tcpdump -n -i en1 -vvv -E 'wlan.fc.type_subtype == 0x0088'
      ```
-   **Note:**
-   The `-E` option is used for filtering based on specific Wi-Fi frame types/subtypes, allowing targeted captures. 
-
+   - Capture Probe request frames with `-E` (Type/Subtype Filtering):  
+      ```bash
+     sudo tcpdump -n -i en1 -vvv -E 'wlan.fc.type_subtype == 0x0040'
+     ```
+      **open pcap in wireshark and filter for EAPOL, if you have frames named KEY1 KEY2 KEY3 KEY4 it suggests that you have successfully captured the 4 way handshake.**
+   **Note: for every set of frames numbered KEY1-4 represents a 4 way handshake**
+  
 5. **Persistence and Continuous Capturing:**
    - Insider threats may set up a cronjob to achieve persistence, ensuring that the Wi-Fi beacon frame capturing script runs automatically at system reboot. Additionally, appending `&` at the end of the `tcpdump` command ensures continuous capturing even after the terminal window is closed.
    - **replace the beacon hexadecimal in the script sturdy-palm-tree.txt with the frame hexadecimal you would like to capture from the list provided in a-sturdy-tree.md**
