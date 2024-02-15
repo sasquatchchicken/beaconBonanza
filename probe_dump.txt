@@ -8,6 +8,11 @@ DELAY 500
 F4
 DELAY 1000
 REM Open Terminal
+GUI SPACE
+DELAY 500
+STRING terminal
+ENTER
+DELAY 1000
 REM Change directory
 STRING cd /tmp
 ENTER
